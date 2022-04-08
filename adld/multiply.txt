@@ -1,0 +1,58 @@
+`timescale 1ns / 1ps
+//////////////////////////////////////////////////////////////////////////////////
+// Company: 
+// Engineer: 
+// 
+// Create Date:    21:28:03 09/07/2021 
+// Design Name: 
+// Module Name:    multiply 
+// Project Name: 
+// Target Devices: 
+// Tool versions: 
+// Description: 
+//
+// Dependencies: 
+//
+// Revision: 
+// Revision 0.01 - File Created
+// Additional Comments: 
+//
+//////////////////////////////////////////////////////////////////////////////////
+module multiply(input clk, input reset, output reg [12:0]fr,output reg done,output reg [12:0]r,output reg [4:0]i,output reg [4:0]cy
+    );
+	 reg [7:0]a;
+	 reg [4:0]B;
+	 
+	 
+	 reg [7:0] p;
+	 always@(posedge clk)begin
+	 if (reset) begin i=5'b0;
+	 a=8'b0010011;
+	 B=5'b01010;
+	 r=13'b0; 
+	 done=1'b0;
+	 p=a;
+	 cy=5'b0;
+	 fr=13'b0;
+	 end
+	 else begin
+	 if(done==1'b0)begin
+	 
+	 if( i<5 & B[i]==1'b1)begin
+	 r=r+{cy,p};end 
+	 {cy,p}={cy,p}<<1;
+	 if (i==5'b00110) begin fr=r;
+	 done=1'b1;
+	 end
+	 end
+	 i=i+1'b1;
+	 end
+	 
+	 
+	 
+	 end
+	 
+
+
+endmodule
+

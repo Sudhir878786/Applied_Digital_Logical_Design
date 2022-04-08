@@ -1,0 +1,68 @@
+`timescale 1ns / 1ps
+//////////////////////////////////////////////////////////////////////////////////
+// Company: 
+// Engineer: 
+// 
+// Create Date:    23:33:10 09/07/2021 
+// Design Name: 
+// Module Name:    or 
+// Project Name: 
+// Target Devices: 
+// Tool versions: 
+// Description: 
+//
+// Dependencies: 
+//
+// Revision: 
+// Revision 0.01 - File Created
+// Additional Comments: 
+//
+//////////////////////////////////////////////////////////////////////////////////
+module root(input clk,input reset,output reg[4:0]r,output reg[6:0]pr,output reg[9:0]w,output reg [9:0]m,output reg[2:0]i
+    );
+	 reg [9:0]a;
+	 reg done;
+always@(posedge clk)begin
+
+	if(reset)begin
+	done=1'b0;
+	a=10'b1001110001;
+	r=5'b0;
+	pr=7'b0;
+	w=10'b0;
+	i=3'b0;
+	m=10'b1100000000;
+	end
+	else begin
+	if(done==1'b0)begin
+		pr=(r+7'b0)<<1;
+		if(((a&m)|w)>=((10'b1+pr)<<((4-i)<<1)))begin
+		
+		
+		w=((a&m)|w)-((10'b1+pr)<<((4-i)<<1));
+		r=r+5'b1;
+		
+		end
+		else begin
+			r=r+5'b0;
+			w=(a&m)|w;
+			
+		end
+		if(i==3'b100)begin done=1'b1;end 
+		else begin
+		r=r<<1;
+		m=m>>2;
+		i=i+3'b1;
+		end
+		end
+		
+		
+		
+	
+	end
+
+
+
+end
+
+endmodule

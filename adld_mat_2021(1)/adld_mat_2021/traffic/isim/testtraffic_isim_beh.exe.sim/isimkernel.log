@@ -1,0 +1,10 @@
+Command line:
+   testtraffic_isim_beh.exe
+     -simmode  gui
+     -simrunnum  0
+     -socket  40909
+
+Mon Apr  1 05:43:08 2019
+
+
+ Elaboration Time: 0.05 sec

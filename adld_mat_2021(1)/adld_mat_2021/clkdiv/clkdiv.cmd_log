@@ -1,0 +1,6 @@
+xst -intstyle ise -ifn "/home/ise/clkdiv/clkdiv.xst" -ofn "/home/ise/clkdiv/clkdiv.syr" 
+ngdbuild -intstyle ise -dd _ngo -nt timestamp -uc ucf.ucf -p xc6slx4-tqg144-3 clkdiv.ngc clkdiv.ngd  
+map -intstyle ise -p xc6slx4-tqg144-3 -w -logic_opt off -ol high -t 1 -xt 0 -register_duplication off -r 4 -global_opt off -mt off -ir off -pr off -lc off -power off -o clkdiv_map.ncd clkdiv.ngd clkdiv.pcf 
+par -w -intstyle ise -ol high -mt off clkdiv_map.ncd clkdiv.ncd clkdiv.pcf 
+trce -intstyle ise -v 3 -s 3 -n 3 -fastpaths -xml clkdiv.twx clkdiv.ncd -o clkdiv.twr clkdiv.pcf -ucf ucf.ucf 
+bitgen -intstyle ise -f clkdiv.ut clkdiv.ncd 

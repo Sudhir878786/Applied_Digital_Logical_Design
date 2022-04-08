@@ -1,0 +1,10 @@
+Command line:
+   lcdvTSET_isim_beh.exe
+     -simmode  gui
+     -simrunnum  1
+     -socket  54427
+
+Mon Apr 15 05:27:43 2019
+
+
+ Elaboration Time: 0.06 sec

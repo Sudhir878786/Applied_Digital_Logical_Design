@@ -1,0 +1,152 @@
+`timescale 1ns / 1ps
+//////////////////////////////////////////////////////////////////////////////////
+// Company: 
+// Engineer: 
+// 
+// Create Date:    23:24:14 09/04/2021 
+// Design Name: 
+// Module Name:    memory1 
+// Project Name: 
+// Target Devices: 
+// Tool versions: 
+// Description: 
+//
+// Dependencies: 
+//
+// Revision: 
+// Revision 0.01 - File Created
+// Additional Comments: 
+//
+//////////////////////////////////////////////////////////////////////////////////
+module memory1(input clka,input por,output [19:0]douta,output reg[3:0]x,output reg[7:0]r,output reg [6:0]y,output reg[7:0]q1,output reg [7:0]q2,
+output reg [19:0]IR,output reg [15:0]PC,output  reg [1:0]d,output reg [15:0]sel
+    );
+	 
+	
+	 
+	 reg [7:0]regfile[15:0];
+	 reg [4:0]i;
+	 reg [14:0]j;
+	 reg [3:0]y1;
+	 reg [3:0]y2;
+	 reg [3:0]fv;
+	 reg [3:0]rs1v;
+	 reg [3:0]rs2v;
+	 reg [3:0]wrv;
+	 reg we;
+	 rom block(.clka(clka),.addra(PC[5:0]),.douta(douta));
+	always@(posedge clka)begin
+	if(por)begin
+	
+	d=2'b00;
+	PC=0;
+	 x=4'b1100;
+	 for (i=0;i<16;i=i+1'b1)
+	 begin
+		regfile[i]=8'b00000000;
+	 end
+	 r=8'b0;
+	 j=15'b0;
+	 y1= 4'b0;
+	 y2= 4'b0;
+	 
+	end
+	else begin
+	IR=douta;
+	if(IR[19:17]==0) begin
+	rs1v=IR[15:12];
+	rs2v=IR[11:8];
+	
+	wrv=IR[7:4];
+	fv=IR[3:0];
+	we=IR[16];
+	
+	 j=j+1'b1;
+		if(j==15'b0)begin
+		x=4'b1101;
+			case(y2)
+		4'b0000:y=7'b0000001;
+		4'b0001:y=7'b1001111;
+		4'b0010:y=7'b0010010;
+		4'b0011:y=7'b0000110;
+		4'b0100:y=7'b1001100;
+		4'b0101:y=7'b0100100;
+		4'b0110:y=7'b0100000;
+		4'b0111:y=7'b0001111;
+		4'b1000:y=7'b0000000;
+		4'b1001:y=7'b0000100;
+		4'b1010:y=7'b0001000;
+		4'b1011:y=7'b1100000;
+		4'b1100:y=7'b0110001;
+		4'b1101:y=7'b1000010;
+		4'b1110:y=7'b0110000;
+		4'b1111:y=7'b0111000;
+		  default:y=7'b1111111;
+		  endcase
+			end
+		else begin if(j==15'b100000000000000) begin
+			x=4'b1110;
+			case(y1)
+		4'b0000:y=7'b0000001;
+		4'b0001:y=7'b1001111;
+		4'b0010:y=7'b0010010;
+		4'b0011:y=7'b0000110;
+		4'b0100:y=7'b1001100;
+		4'b0101:y=7'b0100100;
+		4'b0110:y=7'b0100000;
+		4'b0111:y=7'b0001111;
+		4'b1000:y=7'b0000000;
+		4'b1001:y=7'b0000100;
+		4'b1010:y=7'b0001000;
+		4'b1011:y=7'b1100000;
+		4'b1100:y=7'b0110001;
+		4'b1101:y=7'b1000010;
+		4'b1110:y=7'b0110000;
+		4'b1111:y=7'b0111000;
+		  default:y=7'b1111111;
+		  endcase
+			end end
+		q1=regfile[rs1v];
+		q2=regfile[rs2v];
+		case(fv)
+		4'b0000:r=q1;
+		4'b0001:{d[1],r}=-q1;
+		4'b0010:{d[1],r}=q1+q2;
+		4'b0011:{d[1],r}=q1-q2;
+		4'b0100:{d[1],r}=q1<<1;
+		4'b0101:r=q1>>1;
+		4'b0110:{d[1],r}=q1+1'b1;
+		4'b0111:{d[1],r}=q1-1'b1;
+		4'b1000:r=~q1;
+		4'b1001:r=q1&q2;
+		4'b1010:r=q1|q2;
+		4'b1011:r=q1^q2;
+		4'b1100:r=q1<<1;
+		4'b1101:r=q1>>1;
+		4'b1110:r=q1;
+		4'b1111:r=8'b11111111;
+		endcase
+		y1=r[7:4];
+		y2=r[3:0];
+		if(r==8'b0)d[0]=1'b1;
+		else d[0]=1'b0;
+		if(we==1'b1)
+		regfile[wrv]=r;
+		end
+		case(IR[19:16])
+	4'b000X: sel=1;
+	4'b0100: sel=IR[15:0];
+	4'b0101: begin
+					sel=(d[1]==1)? IR[15:0]:1; end
+	4'b0110: sel = (d==2'b00)? IR[15:0]:1;
+	4'b0111: sel = (d[0]==1)? IR[15:0]:1;
+	default: sel = 1;
+	endcase
+		
+	PC=PC+sel;
+	
+	
+	end end
+	
+
+endmodule

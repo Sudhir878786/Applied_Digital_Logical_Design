@@ -1,0 +1,1 @@
+-intstyle "ise" -incremental -lib "unisims_ver" -lib "unimacro_ver" -lib "xilinxcorelib_ver" -lib "secureip" -o "/home/ise/traffaiclight/test_trafficcontrol_isim_beh.exe" -prj "/home/ise/traffaiclight/test_trafficcontrol_beh.prj" "work.test_trafficcontrol" "work.glbl" 

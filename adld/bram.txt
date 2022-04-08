@@ -1,0 +1,268 @@
+`timescale 1ns / 1ps
+//////////////////////////////////////////////////////////////////////////////////
+// Company: 
+// Engineer: 
+// 
+// Create Date:    11:24:48 09/06/2021 
+// Design Name: 
+// Module Name:    memoryBlock 
+// Project Name: 
+// Target Devices: 
+// Tool versions: 
+// Description: 
+//
+// Dependencies: 
+//
+// Revision: 
+// Revision 0.01 - File Created
+// Additional Comments: 
+//
+//////////////////////////////////////////////////////////////////////////////////
+module memoryBlock(input clka,input por,output reg[3:0]x,output reg [6:0]y,output  reg[7:0]res
+    );
+	 reg[7:0]q1;
+	  reg [7:0]q2;
+	  
+ reg [19:0]IR;
+ reg [15:0]PC;
+  reg [1:0]d;
+  reg [15:0]sel;
+	 
+	 wire [19:0]douta;
+	 reg [7:0]regfile[15:0];
+	 reg [4:0]i;
+	 reg [14:0]j;
+	 reg [3:0]y1;
+	 reg [3:0]y2;
+	 reg [3:0]fv;
+	 reg [3:0]rs1v;
+	 reg [3:0]rs2v;
+	 reg [3:0]wrv;
+	 reg we;
+	 reg [5:0]con;
+	 reg [7:0]r;
+	 reg done;
+	  new_clock new(.clka(clka),.por(por),.new_clock(new_clock));
+	 rom block(.clka(new_clock),.addra(PC[5:0]),.douta(douta));
+	 always@(posedge clka)begin
+	 if(por) begin
+	 j=15'b0;
+	 
+	 x=4'b0000;
+	 end
+	 else begin
+	  j=j+1'b1;
+		if(j==15'b0)begin
+		x=4'b1101;
+			case(y2)
+		4'b0000:y=7'b0000001;
+		4'b0001:y=7'b1001111;
+		4'b0010:y=7'b0010010;
+		4'b0011:y=7'b0000110;
+		4'b0100:y=7'b1001100;
+		4'b0101:y=7'b0100100;
+		4'b0110:y=7'b0100000;
+		4'b0111:y=7'b0001111;
+		4'b1000:y=7'b0000000;
+		4'b1001:y=7'b0000100;
+		4'b1010:y=7'b0001000;
+		4'b1011:y=7'b1100000;
+		4'b1100:y=7'b0110001;
+		4'b1101:y=7'b1000010;
+		4'b1110:y=7'b0110000;
+		4'b1111:y=7'b0111000;
+		  default:y=7'b1111111;
+		  endcase
+			end
+		else begin if(j==15'b100000000000000) begin
+			x=4'b1110;
+			case(y1)
+		4'b0000:y=7'b0000001;
+		4'b0001:y=7'b1001111;
+		4'b0010:y=7'b0010010;
+		4'b0011:y=7'b0000110;
+		4'b0100:y=7'b1001100;
+		4'b0101:y=7'b0100100;
+		4'b0110:y=7'b0100000;
+		4'b0111:y=7'b0001111;
+		4'b1000:y=7'b0000000;
+		4'b1001:y=7'b0000100;
+		4'b1010:y=7'b0001000;
+		4'b1011:y=7'b1100000;
+		4'b1100:y=7'b0110001;
+		4'b1101:y=7'b1000010;
+		4'b1110:y=7'b0110000;
+		4'b1111:y=7'b0111000;
+		  default:y=7'b1111111;
+		  endcase end
+		  else begin if(j==15'b110000000000000) begin
+			x=4'b0111;
+			case(PC[3:0])
+		4'b0000:y=7'b0000001;
+		4'b0001:y=7'b1001111;
+		4'b0010:y=7'b0010010;
+		4'b0011:y=7'b0000110;
+		4'b0100:y=7'b1001100;
+		4'b0101:y=7'b0100100;
+		4'b0110:y=7'b0100000;
+		4'b0111:y=7'b0001111;
+		4'b1000:y=7'b0000000;
+		4'b1001:y=7'b0000100;
+		4'b1010:y=7'b0001000;
+		4'b1011:y=7'b1100000;
+		4'b1100:y=7'b0110001;
+		4'b1101:y=7'b1000010;
+		4'b1110:y=7'b0110000;
+		4'b1111:y=7'b0111000;
+		  default:y=7'b1111111;
+		  endcase end
+		  else begin if(j==15'b010000000000000) begin
+			x=4'b1011;
+			case(regfile[0][3:0])
+		4'b0000:y=7'b0000001;
+		4'b0001:y=7'b1001111;
+		4'b0010:y=7'b0010010;
+		4'b0011:y=7'b0000110;
+		4'b0100:y=7'b1001100;
+		4'b0101:y=7'b0100100;
+		4'b0110:y=7'b0100000;
+		4'b0111:y=7'b0001111;
+		4'b1000:y=7'b0000000;
+		4'b1001:y=7'b0000100;
+		4'b1010:y=7'b0001000;
+		4'b1011:y=7'b1100000;
+		4'b1100:y=7'b0110001;
+		4'b1101:y=7'b1000010;
+		4'b1110:y=7'b0110000;
+		4'b1111:y=7'b0111000;
+		  default:y=7'b1111111;
+		  endcase end
+			end end end end
+	 end
+	always@(posedge new_clock)begin
+	if(por)begin
+	con=6'b0;
+	d=2'b00;
+	PC=16'b0;
+	 for (i=0;i<16;i=i+1'b1)
+	 begin
+		regfile[i]=8'b00000000;
+	 end
+	 r=8'b0;
+	 
+	 y1= 4'b0;
+	 y2= 4'b0;
+	 
+	end
+	else begin
+	IR=douta;
+	if(IR[19:17]==0) begin
+	rs1v=IR[15:12];
+	rs2v=IR[11:8];
+	
+	wrv=IR[7:4];
+	fv=IR[3:0];
+	we=IR[16];
+	
+	
+		q1=regfile[rs1v];
+		q2=regfile[rs2v];
+		case(fv)
+		4'b0000:r=q1;
+		4'b0001:{d[1],r}=-q1;
+		4'b0010:{d[1],r}=q1+q2;
+		4'b0011:{d[1],r}=q1-q2;
+		4'b0100:{d[1],r}=q1<<1;
+		4'b0101:r=q1>>1;
+		4'b0110:{d[1],r}=q1+1'b1;
+		4'b0111:{d[1],r}=q1-1'b1;
+		4'b1000:r=~q1;
+		4'b1001:r=q1&q2;
+		4'b1010:r=q1|q2;
+		4'b1011:r=q1^q2;
+		4'b1100:r=q1<<1;
+		4'b1101:r=q1>>1;
+		4'b1110:r=q1;
+		4'b1111:r=8'b11111111;
+		endcase
+		y1=r[7:4];
+		y2=r[3:0];
+		if(r==8'b0)d[0]=1'b1;
+		else d[0]=1'b0;
+		if(we==1'b1)
+		regfile[wrv]=r;
+		end
+		if(con ==6'b101000)begin
+		PC=16'b0000000000001111;
+		
+		
+		end else begin
+		
+	con=con+1'b1;
+		case(IR[19:16])
+	4'b000X: sel=1;
+	4'b0100: sel=IR[15:0];
+	4'b0101: begin
+					sel=(d[1]==1)? IR[15:0]:1; end
+	4'b0110: sel = (d==2'b00)? IR[15:0]:1;
+	4'b0111: sel = (d[0]==1)? IR[15:0]:1;
+	default: sel = 1;
+	endcase
+		
+	PC=PC+sel;
+	
+	end
+	
+	res=r;
+	
+	end
+	
+	end
+	
+
+endmodule
+
+module new_clock(clka,por,new_clock);
+input clka,por;
+output reg new_clock;
+ reg [22:0]ctr;
+	always@(posedge clka)
+		begin
+			if(por)
+				begin
+					ctr <=23'b0;
+					new_clock<=1'b0;
+				end
+			else begin
+				ctr <= ctr+23'b1;
+				if(ctr == 23'b0)
+						new_clock <=1'b1;
+				else new_clock <=1'b0;
+				end
+		end
+endmodule
+
+
+
+
+NET "clka" LOC ="P51";
+NET "por" LOC ="P78";
+NET "x[0]" LOC ="P120";
+NET "x[1]" LOC ="P119";
+NET "x[2]" LOC ="P118";
+NET "x[3]" LOC ="P117";
+NET "y[0]" LOC ="P126";
+NET "y[1]" LOC ="P127";
+NET "y[2]" LOC ="P131";
+NET "y[3]" LOC ="P133";
+NET "y[4]" LOC ="P134";
+NET "y[5]" LOC ="P137";
+NET "y[6]" LOC ="P140";
+NET "res[0]" LOC ="P97";
+NET "res[1]" LOC ="P98";
+NET "res[2]" LOC ="P99";
+NET "res[3]" LOC ="P100";
+NET "res[4]" LOC ="P101";
+NET "res[5]" LOC ="P102";
+NET "res[6]" LOC ="P104";
+NET "res[7]" LOC ="P105";

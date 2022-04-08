@@ -1,0 +1,1 @@
+-intstyle "ise" -incremental -lib "unisims_ver" -lib "unimacro_ver" -lib "xilinxcorelib_ver" -lib "secureip" -o "/home/ise/DFF/test_dff_isim_beh.exe" -prj "/home/ise/DFF/test_dff_beh.prj" "work.test_dff" "work.glbl" 

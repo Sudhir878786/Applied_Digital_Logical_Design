@@ -1,0 +1,28 @@
+Command line:
+   addrev_isim_beh.exe
+     -simmode  gui
+     -simrunnum  0
+     -socket  60843
+
+Mon Jan 20 04:34:24 2020
+
+
+ Elaboration Time: 0.11 sec
+
+ Current Memory Usage: 198.574 Meg
+
+ Total Signals          : 17
+ Total Nets             : 26
+ Total Signal Drivers   : 6
+ Total Blocks           : 2
+ Total Primitive Blocks : 2
+ Total Processes        : 7
+ Total Traceable Variables  : 18
+ Total Scalar Nets and Variables : 106
+
+ Total Simulation Time: 0.11 sec
+
+ Current Memory Usage: 276.173 Meg
+
+Mon Jan 20 04:34:44 2020
+

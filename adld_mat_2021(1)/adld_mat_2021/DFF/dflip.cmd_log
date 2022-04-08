@@ -1,0 +1,1 @@
+xst -intstyle ise -ifn "/home/ise/DFF/dflip.xst" -ofn "/home/ise/DFF/dflip.syr" 

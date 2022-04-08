@@ -1,0 +1,126 @@
+module clk_1hz(input clk,input por,output reg outclk
+    );
+	 reg [24:0] ctr;
+	 always@(posedge clk)
+	 begin
+	 ctr=(por==1'b1)?25'b0:ctr+25'b1;
+	 outclk=(ctr==25'b0)?1'b1:1'b0;
+	 end
+endmodule
+module fast_clock(input clk,input por,output reg outclk);
+	 reg [15:0] ctr;
+	 always@(posedge clk)
+	 begin
+	 ctr=(por==1'b1)?16'b0:ctr+16'b1;
+	 outclk=(ctr==16'b0)?1'b1:1'b0;
+	 end
+endmodule
+
+module clock(input clk,input por,output reg [3:0]x,output reg [6:0]y);
+clk_1hz c1(.clk(clk),.por(por),.outclk(outclk1));
+fast_clock(.clk(clk),.por(por),.outclk(outclk2));
+reg [1:0]ctrs;
+reg [1:0]ctrm;
+reg [1:0]ctrh;
+reg [1:0]i;
+reg [15:0]display;
+always@(posedge outclk1)
+begin
+if (por==1'b1)
+begin
+ctrs=2'd0;
+ctrm=2'd0;
+ctrh=2'd0;
+display=16'b0;
+end
+else
+begin
+display[3:0]=ctrh[1];
+display[7:4]=ctrh[0];
+display[11:8]=ctrm[1];
+display[15:12]=ctrm[0];
+ctrs=ctrs+2'd1;
+if (ctrs==2'd60)
+begin
+ctrs=2'd0;
+ctrm=ctrm+2'd1;
+end
+if (ctrm==2'd60)
+begin
+ctrs=2'd0;
+ctrm=2'd0;
+ctrh=ctrh+2'd1;
+end
+if (ctrh==2'd24)
+begin
+ctrs=2'd0;
+ctrm=2'd0;
+ctrh=2'd0;
+end
+end
+end
+always@(posedge outclk2)
+begin
+if (por==1'b1)
+begin
+x=4'b0111;
+y=7'b1111111;
+i=2'b0;
+end
+else
+begin
+i=i+2'b1;
+{x[2:0] , x[3]} = {x[3:1] , x[0]};
+if (i==2'b0)
+begin
+case(display[3:0])
+4'b0000:y=7'b0000001;
+4'b0001:y=7'b1001111;
+2:y=7'b0010010;
+endcase
+end
+if (i==2'b1)
+begin
+case(display[7:4])
+4'b0000:y=7'b0000001;
+4'b0001:y=7'b1001111;
+4'b0010:y=7'b0010010;
+4'b0011:y=7'b0000001;
+4'b0100:y=7'b1001100;
+4'b0101:y=7'b0100100;
+4'b0110:y=7'b0100000;
+4'b0111:y=7'b0001111;
+4'b1000:y=7'b0000000;
+4'b1001:y=7'b0001100;
+endcase
+end
+if (i==2'b10)
+begin
+case(display[11:8])
+4'b0000:y=7'b0000001;
+4'b0001:y=7'b1001111;
+4'b0010:y=7'b0010010;
+4'b0011:y=7'b0000001;
+4'b0100:y=7'b1001100;
+4'b0101:y=7'b0100100;
+4'b0110:y=7'b0100000;
+endcase
+end
+if (i==2'b11)
+begin
+case(display[15:12])
+4'b0000:y=7'b0000001;
+4'b0001:y=7'b1001111;
+4'b0010:y=7'b0010010;
+4'b0011:y=7'b0000001;
+4'b0100:y=7'b1001100;
+4'b0101:y=7'b0100100;
+4'b0110:y=7'b0100000;
+4'b0111:y=7'b0001111;
+4'b1000:y=7'b0000000;
+4'b1001:y=7'b0001100;
+endcase
+end
+end
+end
+endmodule

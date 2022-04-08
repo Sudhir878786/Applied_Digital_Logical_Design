@@ -1,0 +1,60 @@
+module debounced_btns (
+    input clk,
+    input rst,
+    input btn0,
+    input btn2,
+    input btn3,
+    output reg led
+);
+    parameter s1=2'b00;
+    parameter s2=2'b01;
+    parameter s3=2'b10;
+    parameter s4=2'b11;
+
+    wire d_btn0;
+    wire d_btn2;
+    wire d_btn3;
+
+    reg [1:0] state;
+
+    debouncer d0(.clk(clk),.rst(rst),.btn(btn0),.d_btn(d_btn0));
+    debouncer d2(.clk(clk),.rst(rst),.btn(btn2),.d_btn(d_btn2));
+    debouncer d3(.clk(clk),.rst(rst),.btn(btn3),.d_btn(d_btn3));
+
+    always@(posedge clk) begin
+        if(rst) begin
+            led=1'b0;
+            state=s1;
+        end
+        else begin
+            case(state)
+            s1:begin
+                if(d_btn0==1'b1) begin
+                    state=s2;
+                end
+            end
+            s2:begin
+                if(d_btn0==1'b0) begin
+                    state=s3;
+                end
+            end
+            s3:begin
+                if(d_btn0==1'b1) begin
+                    state=s2;
+                end
+                else if(d_btn2==1'b1 && d_btn3=1'b1) begin
+                    led=1'b1;
+                    state=s4;
+                end
+            end
+            s4:begin
+                if(d_btn2==1'b0 || d_btn3==1'b0) begin
+                    led=1'b0;
+                    state=s1;
+                end
+            end
+            endcase
+        end
+    end
+
+endmodule

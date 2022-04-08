@@ -1,0 +1,168 @@
+`timescale 1ns / 1ps
+//////////////////////////////////////////////////////////////////////////////////
+// Company: 
+// Engineer: 
+// 
+// Create Date:    08:58:19 07/27/2021 
+// Design Name: 
+// Module Name:    john 
+// Project Name: 
+// Target Devices: 
+// Tool versions: 
+// Description: 
+//
+// Dependencies: 
+//
+// Revision: 
+// Revision 0.01 - File Created
+// Additional Comments: 
+//
+//////////////////////////////////////////////////////////////////////////////////
+module clk1(input clk,input reset,output o_clk1);
+reg [23:0] ctr;
+assign o_clk1=ctr[23];
+always@(posedge clk)begin
+ctr=(reset==1'b1)?24'b0:(ctr+24'b1);
+end
+endmodule
+
+module clk2(input clk,input reset,output o_clk2);
+reg [16:0] ctr;
+assign o_clk2=ctr[16];
+always@(posedge clk) begin
+ctr=(reset==1'b1)?17'b0:(ctr+17'b1);
+end 
+endmodule
+
+
+module johnson_counter(input clk,input reset,output reg [6:0] y,output reg [3:0]en,output clk12,output clk200);
+
+reg [3:0] x;
+reg [15:0] current_display;
+reg [1:0] display_counter;
+
+clk1 c1(clk,reset,clk12);
+clk2 c2(clk,reset,clk200);
+
+always@(posedge clk12) begin
+if (reset==1'b1) begin
+x=4'b0000;
+current_display=16'b0;
+end
+else begin
+{x[3:1],x[0]}={x[2:0],~x[3]};
+{current_display[15:12],current_display[11:8],current_display[7:4],current_display[3:0]}={current_display[11:8],current_display[7:4],current_display[3:0],x[3:0]};
+end
+end
+
+always@(posedge clk200) begin
+if (reset==1'b1) begin
+en=4'b0111;
+display_counter=2'b0;
+end
+else begin 
+{en[2:0],en[3]}={en[3:1],en[0]};
+display_counter=display_counter+1;
+if (display_counter==2'b00) begin 
+case(current_display[3:0])
+0:y=7'b0000001;
+1:y=7'b1001111;
+2:y=7'b0010010;
+3:y=7'b0000110;
+4:y=7'b1001100;
+5:y=7'b0100100;
+6:y=7'b0100000;
+7:y=7'b0001111;
+8:y=7'b0000000;
+9:y=7'b0000100;
+10:y=7'b0001000;
+11:y=7'b1100000;
+12:y=7'b0110001;
+13:y=7'b1000010;
+14:y=7'b0110000;
+15:y=7'b0111000;
+endcase
+end
+else if (display_counter==2'b01) begin 
+case(current_display[7:4])
+0:y=7'b0000001;
+1:y=7'b1001111;
+2:y=7'b0010010;
+3:y=7'b0000110;
+4:y=7'b1001100;
+5:y=7'b0100100;
+6:y=7'b0100000;
+7:y=7'b0001111;
+8:y=7'b0000000;
+9:y=7'b0000100;
+10:y=7'b0001000;
+11:y=7'b1100000;
+12:y=7'b0110001;
+13:y=7'b1000010;
+14:y=7'b0110000;
+15:y=7'b0111000;
+endcase
+end
+else if (display_counter==2'b10) begin 
+case(current_display[11:8])
+0:y=7'b0000001;
+1:y=7'b1001111;
+2:y=7'b0010010;
+3:y=7'b0000110;
+4:y=7'b1001100;
+5:y=7'b0100100;
+6:y=7'b0100000;
+7:y=7'b0001111;
+8:y=7'b0000000;
+9:y=7'b0000100;
+10:y=7'b0001000;
+11:y=7'b1100000;
+12:y=7'b0110001;
+13:y=7'b1000010;
+14:y=7'b0110000;
+15:y=7'b0111000;
+endcase
+end
+else if (display_counter==2'b11) begin 
+case(current_display[15:12])
+0:y=7'b0000001;
+1:y=7'b1001111;
+2:y=7'b0010010;
+3:y=7'b0000110;
+4:y=7'b1001100;
+5:y=7'b0100100;
+6:y=7'b0100000;
+7:y=7'b0001111;
+8:y=7'b0000000;
+9:y=7'b0000100;
+10:y=7'b0001000;
+11:y=7'b1100000;
+12:y=7'b0110001;
+13:y=7'b1000010;
+14:y=7'b0110000;
+15:y=7'b0111000;
+endcase
+end
+end
+end
+
+endmodule
+
+
+
+
+
+
+NET "clk" LOC="P51";
+NET "y[6]" LOC="P140";
+NET "y[5]" LOC="P137";
+NET "y[4]" LOC="P134";
+NET "y[3]" LOC="P133";
+NET "y[2]" LOC="P131";
+NET "y[1]" LOC="P127";
+NET "y[0]" LOC="P126";
+NET "en[0]" LOC="P120";
+NET "en[1]" LOC="P119";
+NET "en[2]" LOC="P118";
+NET "en[3]" LOC="P117";
+NET "reset" LOC="P141";

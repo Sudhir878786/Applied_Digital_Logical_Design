@@ -1,0 +1,6 @@
+NET "clk" LOC=P51;
+NET "rst" LOC=P78;
+NET "out_clk[31]" LOC=P97;
+NET "out_clk[20]" LOC=P98;
+NET "out_clk[12]" LOC=P99;
+NET "out_clk[3]" LOC=P100;

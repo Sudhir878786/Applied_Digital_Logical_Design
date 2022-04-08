@@ -1,0 +1,272 @@
+`timescale 1ns / 1ps
+//////////////////////////////////////////////////////////////////////////////////
+// Company: 
+// Engineer: 
+// 
+// Create Date:    14:29:05 09/01/2021 
+// Design Name: 
+// Module Name:    proccessor 
+// Project Name: 
+// Target Devices: 
+// Tool versions: 
+// Description: 
+//
+// Dependencies: 
+//
+// Revision: 
+// Revision 0.01 - File Created
+// Additional Comments: 
+//
+//////////////////////////////////////////////////////////////////////////////////
+module proccessor(
+input clk,
+input por, 
+input [3:0]dest,
+input rs1,
+input rs2,
+input f,
+input we,
+output reg [3:0] x,
+output reg[6:0]y,
+output  reg [3:0]this_state,
+output reg[1:0]d
+
+    );
+		parameter
+		s1=3'b0001,
+		s2=3'b0010,
+		s3=3'b0011,
+		s4=3'b0100;
+		
+	 reg [7:0]r;
+	 reg [3:0]next_state;
+	 reg [7:0]q1;
+	 reg [7:0]q2;
+	 reg [7:0]regfile[15:0];
+	 reg [4:0]i;
+	 reg [14:0]j;
+	 reg [3:0]y1;
+	 reg [3:0]y2;
+	 reg [3:0]fv;
+	 reg [3:0]rs1v;
+	 reg [3:0]rs2v;
+	 reg [3:0]wrv;
+	 
+	 new_clock new(.clk(clk),.por(por),.new_clock(new_clock));
+	debouncer bounce(.new_clock(new_clock),.por(por),.we(we),.dwe(dwe));
+	 always@(posedge clk)
+	 begin
+	 if(por)begin
+	 d=2'b00;
+	 this_state = s1;
+	 next_state = s1;
+	 x=4'b1100;
+	 for (i=0;i<16;i=i+1'b1)
+	 begin
+		regfile[i]=8'b00000000;
+	 end
+	 r=8'b0;
+	 j=15'b0;
+	 y1= 4'b0;
+	 y2= 4'b0;
+	 end
+	 else begin
+	 j=j+1'b1;
+	 this_state = next_state;
+		if(j==15'b0)begin
+		x=4'b1101;
+			case(y2)
+		4'b0000:y=7'b0000001;
+		4'b0001:y=7'b1001111;
+		4'b0010:y=7'b0010010;
+		4'b0011:y=7'b0000110;
+		4'b0100:y=7'b1001100;
+		4'b0101:y=7'b0100100;
+		4'b0110:y=7'b0100000;
+		4'b0111:y=7'b0001111;
+		4'b1000:y=7'b0000000;
+		4'b1001:y=7'b0000100;
+		4'b1010:y=7'b0001000;
+		4'b1011:y=7'b1100000;
+		4'b1100:y=7'b0110001;
+		4'b1101:y=7'b1000010;
+		4'b1110:y=7'b0110000;
+		4'b1111:y=7'b0111000;
+		  default:y=7'b1111111;
+		  endcase
+			end
+		else begin if(j==15'b100000000000000) begin
+			x=4'b1110;
+			case(y1)
+		4'b0000:y=7'b0000001;
+		4'b0001:y=7'b1001111;
+		4'b0010:y=7'b0010010;
+		4'b0011:y=7'b0000110;
+		4'b0100:y=7'b1001100;
+		4'b0101:y=7'b0100100;
+		4'b0110:y=7'b0100000;
+		4'b0111:y=7'b0001111;
+		4'b1000:y=7'b0000000;
+		4'b1001:y=7'b0000100;
+		4'b1010:y=7'b0001000;
+		4'b1011:y=7'b1100000;
+		4'b1100:y=7'b0110001;
+		4'b1101:y=7'b1000010;
+		4'b1110:y=7'b0110000;
+		4'b1111:y=7'b0111000;
+		  default:y=7'b1111111;
+		  endcase
+			
+		end 
+		end 
+case(this_state)
+	 s1:begin
+		if(rs1==1'b1)begin
+		rs1v=dest;
+		q1=regfile[rs1v];
+		next_state=s2;
+		end
+		else next_state=s1;
+		end
+	 
+	s2:begin
+		if(rs2==1'b1)begin
+		rs2v=dest;
+		q2=regfile[rs2v];
+		next_state=s3;
+		end
+		else next_state=s2;
+		end
+	
+	
+	s3:begin
+		if(f==1'b1)begin 
+		fv=dest;
+		next_state=s4;
+		case(fv)
+		4'b0000:r=q1;
+		4'b0001:{d[1],r}=-q1;
+		4'b0010:{d[1],r}=q1+q2;
+		4'b0011:{d[1],r}=q1-q2;
+		4'b0100:{d[1],r}=q1<<1;
+		4'b0101:r=q1>>1;
+		4'b0110:{d[1],r}=q1+1'b1;
+		4'b0111:{d[1],r}=q1-1'b1;
+		4'b1000:r=~q1;
+		4'b1001:r=q1&q2;
+		4'b1010:r=q1|q2;
+		4'b1011:r=q1^q2;
+		4'b1100:r=q1<<1;
+		4'b1101:r=q1>>1;
+		4'b1110:r=q1;
+		4'b1111:r=8'b11111111;
+		endcase
+		y1=r[7:4];
+		y2=r[3:0];
+		if(r==8'b0)d[0]=1'b1;
+		else d[0]=1'b0;
+		end
+		else next_state=s3;
+		end
+	s4:begin	
+		if(dwe==1'b1)begin
+		wrv=dest;
+		regfile[wrv]=r;
+		next_state=s1;
+		end
+		else next_state=s4;
+		end
+	default:next_state=s1;
+		endcase
+		
+		end
+	
+		
+	
+	end
+	
+
+endmodule
+
+
+
+
+module debouncer (
+    input new_clock,
+    input por,
+    input we,
+    output reg dwe
+);
+    
+    reg [3:0] counter;
+    
+
+   always@(posedge new_clock,posedge por) begin
+        if(por) begin
+            counter=4'b0;
+            dwe=1'b0;
+        end
+        else begin
+            if(dwe!=we) begin
+                counter=counter+4'b1;
+            end
+            if(counter==4'b1001) begin
+                counter=4'b0;
+                dwe=we;
+            end
+            if(dwe==we && counter!=0) begin
+                counter=4'b0;
+            end
+        end
+    end
+endmodule
+
+
+module new_clock(clk,por,new_clock);
+input clk,por;
+output reg new_clock;
+ reg [4:0]ctr;
+	always@(posedge clk)
+		begin
+			if(por)
+				begin
+					ctr <=5'd0;
+					new_clock<=1'b0;
+				end
+			else begin
+				ctr <= ctr+5'd1;
+				if(ctr == 5'd25000)
+						new_clock <=1'b1;
+				else new_clock <=1'b0;
+				end
+		end
+endmodule
+
+
+
+
+NET "clk" LOC ="P51";
+NET "por" LOC ="P78";
+NET "x[0]" LOC ="P120";
+NET "x[1]" LOC ="P119";
+NET "x[2]" LOC ="P118";
+NET "x[3]" LOC ="P117";
+NET "y[0]" LOC ="P126";
+NET "y[1]" LOC ="P127";
+NET "y[2]" LOC ="P131";
+NET "y[3]" LOC ="P133";
+NET "y[4]" LOC ="P134";
+NET "y[5]" LOC ="P137";
+NET "y[6]" LOC ="P140";
+NET "dest[0]" LOC ="P93";
+NET "dest[1]" LOC ="P92";
+NET "dest[2]" LOC ="P88";
+NET "dest[3]" LOC ="P87";
+NET "rs1" LOC ="P139";
+NET "rs2" LOC ="P141";
+NET "f" LOC ="P143";
+NET "we" LOC ="P142";
+NET "this_state[0]" LOC ="P105";
+NET "this_state[1]" LOC ="P104";
+NET "this_state[2]" LOC ="P102";
+NET "this_state[3]" LOC ="P101";

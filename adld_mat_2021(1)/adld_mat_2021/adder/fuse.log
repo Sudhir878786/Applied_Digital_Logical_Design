@@ -1,0 +1,21 @@
+Running: /opt/Xilinx/14.7/ISE_DS/ISE/bin/lin64/unwrapped/fuse -intstyle ise -incremental -lib unisims_ver -lib unimacro_ver -lib xilinxcorelib_ver -lib secureip -o /home/ise/adder/testadder_isim_beh.exe -prj /home/ise/adder/testadder_beh.prj work.testadder work.glbl 
+ISim P.20160913 (signature 0xfbc00daa)
+Number of CPUs detected in this system: 1
+Turning on mult-threading, number of parallel sub-compilation jobs: 0 
+Determining compilation order of HDL files
+Analyzing Verilog file "/home/ise/adder/adder_block.v" into library work
+Analyzing Verilog file "/home/ise/adder/testadder.v" into library work
+Analyzing Verilog file "/opt/Xilinx/14.7/ISE_DS/ISE//verilog/src/glbl.v" into library work
+Starting static elaboration
+Completed static elaboration
+Fuse Memory Usage: 94920 KB
+Fuse CPU Usage: 1470 ms
+Compiling module adder_block
+Compiling module testadder
+Compiling module glbl
+Time Resolution for simulation is 1ps.
+Compiled 3 Verilog Units
+Built simulation executable /home/ise/adder/testadder_isim_beh.exe
+Fuse Memory Usage: 98020 KB
+Fuse CPU Usage: 1470 ms
+GCC CPU Usage: 230 ms

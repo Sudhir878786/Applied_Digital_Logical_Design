@@ -1,0 +1,72 @@
+module t_light_me(input clk,
+input reset,
+output reg [3:0]y,
+output reg [3:0]g,
+output reg [3:0]r,
+output reg [5:0]ctr
+    );
+	 
+always@(posedge clk)begin
+ctr=ctr+1'b1;
+r=~(y|g);
+if(reset)begin
+y=4'b0000;
+g=4'b0001;
+r=~(y|g);
+ctr=6'b0;
+end
+else begin
+
+if(ctr==6'b101000)y=g<<1;
+else begin if(ctr==6'b0110010)
+begin
+g=g<<1;
+y=0;
+ctr=6'b0;end
+end
+end
+end
+
+endmodule
+
+
+
+
+module test;
+
+	// Inputs
+	reg clk;
+	reg reset;
+
+	// Outputs
+	wire [3:0] y;
+	wire [3:0] g;
+	wire [3:0] r;
+	wire [5:0]ctr;
+
+	// Instantiate the Unit Under Test (UUT)
+	t_light_me uut (
+		.clk(clk), 
+		.reset(reset), 
+		.y(y), 
+		.g(g), 
+		.r(r),
+		.ctr(ctr)
+	);
+	always #2 clk=~clk;
+	initial begin
+		// Initialize Inputs
+		clk = 0;
+		reset = 1;
+		#20;
+		reset=0;
+
+		// Wait 100 ns for global reset to finish
+		#100;
+        
+		// Add stimulus here
+
+	end
+      
+endmodule
+

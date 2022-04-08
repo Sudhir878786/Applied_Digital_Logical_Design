@@ -1,0 +1,88 @@
+module dbounce(
+input clk,
+input reset,
+input  [2:0]new_value,
+output ld0
+    );
+	 wire new_clock;
+	 
+	 new_clock new(.clk(clk),.reset(reset),.new_clock(new_clock));
+	 
+	 parameter 
+		initial_value=1'b1,
+		button_0=       3'b100,
+		button_all_0= 3'b000,
+		button_2=     3'b010,
+		button_3=     3'b111,
+		button_2and3= 3'b011;
+	reg [2:0]this_state;
+	reg [2:0]next_state;
+	always@(posedge clk)begin
+	  x=0;
+	  end
+	 always@(posedge new_clock)
+		begin
+			if(reset)
+				this_state <= initial_value;
+			else
+				this_state <= next_state;
+								
+		end
+	 always@(this_state,new_value)
+		begin
+			case(this_state)
+				initial_value:begin if(new_value[0]==1 & new_value[1]==0 & new_value[2]==0)
+										next_state=button_0;
+										else next_state=initial_value;end
+				button_0:begin if(new_value[0]==0 & new_value[1]==0 & new_value[2]==0)						
+										next_state=button_all_0;
+										else next_state=button_0;end
+				button_all_0:begin if(new_value[0]==0 & new_value[1]==1 & new_value[2]==0)
+										next_state=button_2;
+										else begin if(new_value[0]==0 & new_value[1]==0 & new_value[2]==1)
+										next_state=button_3;
+										else begin if(new_value[0]==0 & new_value[1]==1 & new_value[2]==1)
+										next_state=button_2and3;
+										else next_state=button_all_0;end end end
+				button_2:begin if(new_value[0]==0 & new_value[1]==1 & new_value[2]==1)
+										next_state=button_2and3;
+										else next_state=button_2;end
+				button_3:begin if(new_value[0]==0 & new_value[1]==1 & new_value[2]==1)
+										next_state=button_2and3;
+										else next_state=button_3;end
+				default:next_state=initial_value;
+			endcase
+		end
+   assign ld0= (this_state==button_2and3)?1:0;
+
+endmodule
+
+
+module new_clock(clk,reset,new_clock);
+input clk,reset;
+output reg new_clock;
+ reg [23:0]ctr;
+	always@(posedge clk)
+		begin
+			if(reset)
+				begin
+					ctr <=24'b0;
+					new_clock<=1'b0;
+				end
+			else
+				ctr <= ctr+24'b1;
+				if(ctr == 24'b0)
+						new_clock <=1'b1;
+				else new_clock <=1'b0;
+		end
+endmodule
+
+
+
+
+NET "clk" LOC ="P51";
+NET "reset" LOC ="P143";
+NET "new_value[0]" LOC ="P139";
+NET "new_value[1]" LOC ="P141";
+NET "new_value[2]" LOC ="P142";
+NET "ld0" LOC ="P105";

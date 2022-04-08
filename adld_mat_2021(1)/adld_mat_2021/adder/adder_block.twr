@@ -1,0 +1,85 @@
+--------------------------------------------------------------------------------
+Release 14.7 Trace  (lin64)
+Copyright (c) 1995-2013 Xilinx, Inc.  All rights reserved.
+
+/opt/Xilinx/14.7/ISE_DS/ISE/bin/lin64/unwrapped/trce -intstyle ise -v 3 -s 3 -n
+3 -fastpaths -xml adder_block.twx adder_block.ncd -o adder_block.twr
+adder_block.pcf
+
+Design file:              adder_block.ncd
+Physical constraint file: adder_block.pcf
+Device,package,speed:     xc6slx4,tqg144,C,-3 (PRODUCTION 1.23 2016-11-22)
+Report level:             verbose report
+
+Environment Variable      Effect 
+--------------------      ------ 
+NONE                      No environment variables were set
+--------------------------------------------------------------------------------
+
+INFO:Timing:2698 - No timing constraints found, doing default enumeration.
+INFO:Timing:3412 - To improve timing, see the Timing Closure User Guide (UG612).
+INFO:Timing:2752 - To get complete path coverage, use the unconstrained paths 
+   option. All paths that are not constrained will be reported in the 
+   unconstrained paths section(s) of the report.
+INFO:Timing:3339 - The clock-to-out numbers in this timing report are based on 
+   a 50 Ohm transmission line loading model.  For the details of this model, 
+   and for more information on accounting for different loading conditions, 
+   please see the device datasheet.
+
+
+
+Data Sheet report:
+-----------------
+All values displayed in nanoseconds (ns)
+
+Pad to Pad
+---------------+---------------+---------+
+Source Pad     |Destination Pad|  Delay  |
+---------------+---------------+---------+
+a<0>           |cout           |    6.734|
+a<0>           |sum<0>         |    6.525|
+a<0>           |sum<1>         |    6.446|
+a<0>           |sum<2>         |    6.202|
+a<0>           |sum<3>         |    6.919|
+a<1>           |cout           |    6.767|
+a<1>           |sum<1>         |    6.479|
+a<1>           |sum<2>         |    5.985|
+a<1>           |sum<3>         |    6.952|
+a<2>           |cout           |    6.334|
+a<2>           |sum<2>         |    6.635|
+a<2>           |sum<3>         |    6.519|
+a<3>           |cout           |    6.430|
+a<3>           |sum<3>         |    6.615|
+b<0>           |cout           |    7.575|
+b<0>           |sum<0>         |    6.580|
+b<0>           |sum<1>         |    7.287|
+b<0>           |sum<2>         |    6.982|
+b<0>           |sum<3>         |    7.760|
+b<1>           |cout           |    7.260|
+b<1>           |sum<1>         |    6.972|
+b<1>           |sum<2>         |    7.063|
+b<1>           |sum<3>         |    7.445|
+b<2>           |cout           |    6.545|
+b<2>           |sum<2>         |    7.360|
+b<2>           |sum<3>         |    6.730|
+b<3>           |cout           |    6.348|
+b<3>           |sum<3>         |    6.533|
+cin            |cout           |    7.407|
+cin            |sum<0>         |    6.305|
+cin            |sum<1>         |    7.119|
+cin            |sum<2>         |    6.933|
+cin            |sum<3>         |    7.592|
+---------------+---------------+---------+
+
+
+Analysis completed Wed Jul  7 05:19:22 2021 
+--------------------------------------------------------------------------------
+
+Trace Settings:
+-------------------------
+Trace Settings 
+
+Peak Memory Usage: 375 MB
+
+
+
